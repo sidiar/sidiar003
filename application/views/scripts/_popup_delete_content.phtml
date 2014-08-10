@@ -1,0 +1,29 @@
+
+<p >Do you confirm to remove article "<span id="deletePopUpTitle"></span>" ?</p>
+
+
+
+<script src="/js/views/popup-deletecontent-view.js"></script>
+
+<script>
+    
+    function showDeleteContentController(content) {
+        
+        var contentDeleteModel = new ContentDeleteModel({
+            id: content.get('id'),
+            title: content.get('title')
+        });
+        
+        deleteContentPopupView = new DeleteContentPopupView({
+            model:contentDeleteModel,
+            el: $('#deleteContent_popup')
+        });
+        
+        deleteContentPopupView.showPopup();
+        
+        deleteContentPopupView.on("success",function(content) {
+           mainView.clearModals();
+           mainView.refresh();
+        });
+    }
+</script>

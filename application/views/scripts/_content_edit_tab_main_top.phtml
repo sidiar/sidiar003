@@ -1,0 +1,75 @@
+<?php
+    // echo var_dump($this->article);
+
+        
+    function formatDate($date_string) {
+        if (empty($date_string)) return '';
+        return date_format(new DateTime($date_string),'d.m.Y');
+    }
+    
+    
+    /* STATUS */
+    
+    
+    switch ($this->content->status) {
+        
+        case 0:
+            $statusclass = 'btn-status-off';
+            $statusLabel = 'Not published';
+            break;
+        
+        case 1:
+            $statusclass = 'btn-status-on';
+            $statusLabel = 'Published';
+            break;
+        
+        case 2:
+            $statusclass = 'btn-status-pending'; 
+            $statusLabel = 'Pending';
+            break;
+        
+            
+    }
+
+?>
+
+
+<div class="tab-main-top">
+    <ul class="list-group tab-main-top-groups-left ">
+        <li class="list-group-item">
+            <span class="badge"><?= $this->content->view_count; ?></span>Views
+        </li>
+        <li class="list-group-item">
+            <span class="badge"><?= $this->content->share_count; ?></span>Shares
+        </li>
+        <li class="list-group-item">
+            <span class="badge">4</span>Comments
+        </li>
+    </ul>
+
+    <ul class="list-group tab-main-top-groups-left ">
+        <li class="list-group-item">
+            <span class="badge" ><?= formatDate($this->content->creation_date); ?></span>Creation date
+        </li>
+        <li class="list-group-item" id="label_publish_date_from"  <?= (!$this->content->status) ? 'style="display:none"' : ''; ?> >
+            <span class="badge"><?= formatDate($this->content->publish_date_from); ?></span>Publish from
+        </li>
+        <li class="list-group-item" id="label_publish_date_to"  <?= (!$this->content->expires) ? 'style="display:none"' : ''; ?> >
+            <span class="badge"><?= formatDate($this->content->publish_date_to); ?></span>Publish until
+        </li>
+    </ul>
+
+    <div class="tab-main-top-groups-right ">
+        <button type="button" id="showPublishOptionsButton" class="btn btn-status <?= $statusclass; ?>">
+            <?= $statusLabel; ?>
+        </button>     
+        <div class="clearfix"></div>
+        <button type="button" href="#modal_activar" data-toggle="modal"  class="btn btn-preview">
+            <span class="glyphicon glyphicon-eye-open"></span> Preview
+        </button>     
+    </div>
+    <div class="clearfix"></div>
+</div>
+<hr>
+
+

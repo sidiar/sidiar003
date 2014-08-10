@@ -1,0 +1,164 @@
+<?php
+
+require_once '/Users/ariel/magnet/Amomicasa/06_WWW/admin/library/AMC/Magazine/AMCFactory.php';
+require_once '/Users/ariel/magnet/Amomicasa/06_WWW/admin/library/AMC/ContentMapper/ContentMapper.php';
+require_once 'DatabaseTestCase.php';
+        
+/**
+ * Description of ContentTest
+ *
+ * @author ariel
+ */
+/*
+PHPUnit_Framework_TestCase
+ *  */
+
+class ContentTest  extends My_Test_PHPUnit_DatabaseTestCase {
+    //put your code here
+    
+    private $amcFactory;
+    private $articleMapper;
+    
+    /* debería ser private, por algún motivo phpunit no mantiene el valor a menos que se declare en el setUp, pendiente de investigar*/
+    static $article_id;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->amcFactory = AMC\AMCFactory::getInstance();
+        $this->articleMapper = \AMC\ContentMapper::getInstance(\AMC\ContentMapper::CONTENTTYPE_ARTICLE);
+    }
+    
+     protected function getDataSet()
+    {
+       //    return $this->createMySQLXMLDataSet(APPLICATION_PATH . '/../tests/data/contenidos.xml');
+          $dataSet = new PHPUnit_Extensions_Database_DataSet_CsvDataSet();
+          //$dataSet->addTable('article', APPLICATION_PATH . '/../tests/data/csv/article.csv');
+          //$dataSet->addTable('content', APPLICATION_PATH . '/../tests/data/csv/content.csv');
+          return $dataSet;
+        
+    }
+    
+    
+    public function testCreateArticle() {
+        
+        $newArticle = $this->amcFactory->makeContent(AMC\AMCFactory::CONTENTTYPE_ARTICLE);
+        
+        
+        
+        $newArticle->title = 'Antes de ir a Ikea';
+        $newArticle->section_id = 1;
+        $newArticle->text = 'Text: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+        $newArticle->intro = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+        $newArticle->fulltext = <<<'EOD'
+<strong>El pasaje estándar Lorem Ipsum, usado desde el año 1500.</strong>
+<p>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>
+<strong>Sección 1.10.32 de "de Finibus Bonorum et Malorum", escrito por Cicero en el 45 antes de Cristo</strong>
+<p>
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+</p>
+<strong>Traducción hecha por H. Rackham en 1914</strong>
+<p>
+But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?
+</p>
+EOD;
+        
+        self::$article_id = $this->articleMapper->add($newArticle);
+        echo "Testinng new Artice with ID: " . self::$article_id . "\n";
+        
+        $this->assertGreaterThan(0,self::$article_id);
+
+    } 
+   
+    public function testFindArticle() {
+        
+        echo "Testinng find Artice with ID: " . self::$article_id . "\n";
+        $article = $this->articleMapper->find(self::$article_id);
+
+        $this->assertNotEquals($article,null);
+                
+        $this->assertEquals($article->id,self::$article_id);
+        $this->assertEquals($article->title,'Antes de ir a Ikea');
+        $this->assertEquals($article->section_id,1);
+        $this->assertEquals($article->intro,'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.');
+        $this->assertEquals($article->text,'Text: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.');
+        
+        
+    }
+    
+    public function testUpdateArticle() {
+        
+        $article = $this->amcFactory->makeContent(AMC\AMCFactory::CONTENTTYPE_ARTICLE);
+        
+        /* update article */
+        $article->id = self::$article_id;
+        $article->title = 'titulo 1';
+        $article->section_id = 2;
+        
+        $this->articleMapper->update($article);
+        
+        /* load and check changes */
+        $dbArticle = $this->articleMapper->find(self::$article_id);
+        $this->assertEquals($article->title,'titulo 1');
+        $this->assertEquals($article->section_id,2);
+        
+        /* update same article again */
+        $article->title = 'titulo 2';
+        $article->section_id = 1;
+        
+        $this->articleMapper->update($article);
+        
+        /* load and check changes */
+        $dbArticle = $this->articleMapper->find(self::$article_id);
+        $this->assertEquals($article->title,'titulo 2');
+        $this->assertEquals($article->section_id,1);
+        
+    }
+    
+    
+    public function testDeleteArticle() {
+        
+        $this->assertEquals(1,$this->articleMapper->delete(self::$article_id));
+        
+        $article = $this->articleMapper->find(self::$article_id);
+        
+        $this->assertEquals($article->title,null);
+        
+    }
+    
+    
+    public function testCreateArticles() {
+        
+        $newArticle = $this->amcFactory->makeContent(AMC\AMCFactory::CONTENTTYPE_ARTICLE);
+        
+        
+        
+        $newArticle->title = 'Antes de ir a Ikea [1]';
+        $newArticle->section_id = 1;
+        $newArticle->text = '[1] Text: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+        $newArticle->intro = '[1] Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+        $newArticle->fulltext = <<<'EOD'
+<strong>[1] El pasaje estándar Lorem Ipsum, usado desde el año 1500.</strong>
+<p>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>
+<strong>Sección 1.10.32 de "de Finibus Bonorum et Malorum", escrito por Cicero en el 45 antes de Cristo</strong>
+<p>
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+</p>
+<strong>Traducción hecha por H. Rackham en 1914</strong>
+<p>
+But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?
+</p>
+EOD;
+        
+        $this->articleMapper->add($newArticle);
+        
+        
+        
+       
+    } 
+    
+}
+

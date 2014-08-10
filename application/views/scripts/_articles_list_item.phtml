@@ -1,0 +1,42 @@
+<?php
+    
+    /* STATUS */
+    
+    
+    switch ($this->status) {
+        
+        case 0:
+            $statusclass = 'glyphicon-remove-circle  list-status-publish-off';
+            break;
+        
+        case 1:
+            $statusclass = 'glyphicon-ok-circle  list-status-publish-on';
+            break;
+        
+        case 2:
+            $statusclass = 'glyphicon-ok-circle  list-status-publish-pending'; 
+            break;
+        
+            
+    }
+
+    ?>
+
+
+
+<tr data-value="<?= $this->id;?>">
+    
+                <td class="list-cell-align-center "><a href="#" class="showPublishOptionsButton"><span class="glyphicon <?= $statusclass ?>"></span></a></td>
+                <td class="list-cell-title"><?= utf8_encode($this->title) ?></td>
+                <td><?= utf8_encode($this->section) ?></td>
+                <td class="list-cell-align-center " ><span class="publish_date_from_column"><?= str_replace('-', '.', $this->publish_date_from); ?></span></td>
+                <td class="list-cell-align-center"><?= $this->view_count ?></td>
+                <td class="list-cell-align-center"><?= $this->share_count ?></td>
+                <td>
+                    <a href="#"><span class="glyphicon glyphicon-eye-open list-action-button"></span></a>&nbsp;&nbsp;
+                    <a href="#" class="editContentButton"><span class="glyphicon glyphicon-pencil list-action-button"></span></a>&nbsp;&nbsp;
+                    <a href="#" class="deleteContentButton"><span class="glyphicon glyphicon-trash list-action-button"></span></a>
+
+                </td>
+            </tr>
+            

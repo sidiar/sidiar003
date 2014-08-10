@@ -1,0 +1,76 @@
+<?php
+
+namespace AMC;
+
+require_once dirname(__FILE__) . '/../../MAGAZINE/ContentMapper/AbstractContentMapper.php';
+
+/**
+ * Description of ArticleMapper
+ *
+ * @package AMC
+ * @author ariel
+ * @see http://martinfowler.com/eaaCatalog/concreteTableInheritance.html
+ */
+class ArticleMapper extends \Magazine\AbstractContentMapper 
+{
+        
+    protected function getTableName() 
+    {
+        return 'article';
+    }
+    
+    
+    /*
+     * Maps row properties to domainObject properties
+     * Called from Abstract Find() method
+     * 
+     * @param Zend_Db_Table_Row $row
+     * @return \AMC\Article
+     */
+    protected function load($row) 
+    {
+        $article = new \AMC\Article();
+        
+        /* article is passed by reference */
+        parent::abstractLoad($article, $row);
+        
+        $article->section_id = $row->section_id;
+        $article->intro = $row->intro;
+        $article->fulltext = $row->fulltext;
+        
+        return $article;
+    }
+    
+    
+    /*
+     * Crea un array asociativo con los campos no vacíos del contenido
+     * 
+     * Aqui aprovechamos la funcionalidad del Zend Table Gateway que solo guarda los campos 
+     * que pasamos como parámetro en el array asociativo.
+     * 
+     * @param \Magazine\Content       $content
+     * @return associative_array
+     */
+    protected function save($article) 
+    {
+        $result = array();
+        
+        if (!empty($article->id)) {
+            $result['content_id'] = $article->id;
+        }
+        
+        if (!empty($article->section_id)) {
+            $result['section_id'] = $article->section_id;
+        }
+        
+        if (!empty($article->intro)) {
+            $result['intro'] = $article->intro;
+        }
+
+        if (!empty($article->fulltext)) {
+            $result['fulltext'] = $article->fulltext;
+        }
+        return $result;
+        
+    }
+}

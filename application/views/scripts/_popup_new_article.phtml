@@ -1,0 +1,48 @@
+
+<div class="form-group has-feedback">
+    <label for="inputTitle">Title</label>
+    <input type="text" class="form-control" id="newContentTitleInput" placeholder="Please enter content title" value="">
+</div>
+
+<div class="form-group">
+    <label for="exampleInputPassword1">Section</label>
+    <select id="newArticleSection" class="form-control">
+        <?php
+        foreach ($this->sections as $section) {
+            echo "<option value='$section->id'  >$section->name</option>";
+        }
+        ?>                            
+    </select>
+</div>   
+
+<script src="/js/views/popup-newcontent-view.js"></script>
+<script src="/js/views/popup-newarticle-view.js"></script>
+
+<script>
+
+    var newContentModalView;
+    
+    function showNewContentController() {
+        
+        
+        contentModel = new ContentModel({ 
+            title: ''
+        });
+         
+        newContentModalView = new NewArticlePopupView({
+             model: contentModel,
+             el: $('#newContent_popup')
+        });
+        
+        
+        newContentModalView.on("success",function() {
+            if (contentModel.get('id')) {
+                mainView.clearModals();
+                urlModel.saveURL();
+                mainView.loadDynamicContent('/edit/id/'+contentModel.get('id'));
+            }
+        });
+        newContentModalView.showPopup();
+    }
+    
+</script>

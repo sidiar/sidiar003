@@ -1,0 +1,69 @@
+<?php
+
+namespace Magazine;
+
+/**
+ * Define una interface para crear una query de contenidos.
+ * 
+ * Configura la query en funcion del orden, agrupamiento y aplica filtros.
+ * En el Builder pattern cumple el rol del Builder.
+ * 
+ * @author  ariel
+ * @link    http://en.wikipedia.org/wiki/Builder_pattern Builder Pattern (GoF) 
+ * @package Magazine
+ */
+
+interface ContentQueryBuilder {
+    
+    const FILTER_TEXT = 'filter_text';
+    
+    
+    const ORDERBY_TITLE = 'order_title';
+    const ORDERBY_PUBLISH_DATE_FROM = 'order_publish_date_from';
+    const ORDERBY_VIEW_COUNT = 'order_view_count';
+    const ORDERBY_SHARE_COUNT = 'order_share_count';
+    
+    /**
+     * Inicializa la consulta sin aplicar ningún tipo de filtro.
+     * 
+     * Puede ser llamado desde el constructor de la clase concreta.
+     */
+    public function initQuery();
+    
+    
+    /**
+     * Agrega un filtro a la consulta.
+     * 
+     * @param string $filter_type Tipo de filtro definido en las constantes de la interface \ContentQueryBuilder.
+     * @param mixed $value Valor del filtro a aplicar.
+     * @throws InvalidArgumentException Si el parámetro recibido no esta entre los filtros especificados en las constantes.
+     */
+    public function applyFilter($filter_type,$value);
+        
+    /**
+     * Aplica un orden a la consulta.
+     * 
+     * @param string $order_criteria Tipo de orden definido en las constantes de la interface \ContentQueryBuilder.
+     * @throws InvalidArgumentException Si el parámetro recibido no esta entre los filtros especificados en las constantes.
+     */
+    public function applyOrder($order_criteria);
+    
+    /**
+     * Devuelve el objeto Zend_Db_Select de la consulta
+     * 
+     * @return Zend_Db_Select
+     */
+    public function getQuery();
+    
+    
+    /**
+     * Hace un reset de todos los filtros de la consulta.
+     */
+    public function clearFilters();
+    
+    
+     /**
+     * Hace un reset de todos orders de la consulta.
+     */
+    public function clearOrder();
+}

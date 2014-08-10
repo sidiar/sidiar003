@@ -1,0 +1,57 @@
+<?php
+
+    if (empty($this->filters['text'])) {
+        $this->filters['text'] ='';
+    }
+    
+    $this->filters['content_type'] = 'CONTENT_TYPE_DIAPO';
+
+    echo $this->partial('_content_list.phtml' ,array(
+        'results' => $this->results,
+        'filters' => $this->filters,
+        'contentlist_body' => $this->partial('_content_list_diapos.phtml',array(
+            'results' => $this->results,
+            'filters' => $this->filters
+        ))
+    ));
+    
+    
+
+
+/*----------------------------------------------------*/
+
+/*
+ * PUBLISH OPTIONS POP UP
+ */
+
+    echo $this->partial('_popup.phtml' ,array(
+        'popup_id' => 'publishContent_popup',
+        'popup_body' => $this->partial('_popup_publish_content.phtml',array())
+        ));
+    
+
+
+/*----------------------------------------------------*/
+
+/*
+ * NEW CONTENT POP UP
+ */
+
+
+    echo $this->partial('_popup.phtml' ,array(
+        'popup_id' => 'newContent_popup',
+        'popup_body' => $this->partial('_popup_new_content.phtml',array('popuptitle'=>'New Diapo'))
+        ));
+    
+
+/*----------------------------------------------------*/
+
+/*
+ * DELETE CONTENT POP UP
+ */
+
+
+    echo $this->partial('_popup.phtml' ,array(
+        'popup_id' => 'deleteContent_popup',
+        'popup_body' => $this->partial('_popup_delete_content.phtml',array())
+        ));

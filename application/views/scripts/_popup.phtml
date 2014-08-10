@@ -1,0 +1,40 @@
+<div class="modal fade" id="<?=$this->popup_id; ?>">
+
+    <div class="panel panel-popup border-success">
+        <div class="panel-heading heading-success"><span class="_popup_title" ></span>
+
+            <a href="#" class="close_modal" data-dismiss="modal">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+
+        </div>
+
+        <div class="panel-body">
+            <div class="_popup_loading_messagebox">
+                <span class="glyphicon glyphicon-refresh"></span> Loading
+            </div>
+            
+            <div class="_popup_success_messagebox">
+                <div class="alert alert-success _popup_success_message"></div>
+                <button type="submit" class="btn btn-default _popup_success_btn">Accept</button>
+            </div>
+            <div class="_popup_bodybox">
+                <div class="alert alert-danger _popup_error_messagebox">Invalid date from</div>
+
+                <?= $this->popup_body; ?>
+
+
+                <br/>
+                <button type="submit" class="btn btn-default _popup_apply_btn">Apply</button>
+                <button type="submit" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+</div>
+
+<script src="/js/views/popup-view.js"></script>

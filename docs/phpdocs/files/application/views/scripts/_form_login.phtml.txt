@@ -1,0 +1,24 @@
+<form id="login" action="<?= $this->element->getAction(); ?>" method="<?= $this->element->getMethod(); ?>" role="form">
+
+<div class="form-group">
+<?= $this->element->email; ?>
+</div>
+    
+<div class="form-group has-feedback ">
+    <?= $this->element->pswd; ?>
+    <span class=" glyphicon glyphicon-lock form-control-feedback login_iconpassword "></span>
+</div>
+
+<div class="checkbox">
+    <label>
+<?= $this->element->public; ?> Remember me
+    </label>
+</div>
+
+<button type="submit" class="btn btn-default btn-primary btn-block login_submit">
+  <span class="glyphicon glyphicon-ok"></span> 
+</button>
+
+    
+</form>
+

@@ -1,0 +1,108 @@
+
+
+<script>
+    
+    var ContentModel = Backbone.Model.extend({
+        <?php
+          switch ($this->filters['content_type']) {
+              case 'CONTENT_TYPE_ARTICLE':
+                  echo "url: '/api/article'";
+                  break;
+              case 'CONTENT_TYPE_DIAPO':
+                  echo "url: '/api/diapo'";
+                  break;
+          }
+        ?>
+    
+   });
+   var ContentDeleteModel = Backbone.Model.extend({
+           <?php
+          switch ($this->filters['content_type']) {
+              case 'CONTENT_TYPE_ARTICLE':
+                  echo "urlRoot: '/api/article/id'";
+                  break;
+              case 'CONTENT_TYPE_DIAPO':
+                  echo "urlRoot: '/api/diapo/id'";
+                  break;
+          }
+        ?>
+   
+   });
+   
+</script>
+
+<div id="contentListContainer">
+    <?=$this->contentlist_body;?>
+</div>
+
+
+<script src="/js/libs/utils.js"></script>
+
+
+<script src="/js/models/contentListItem-model.js"></script>
+<script src="/js/collections/content-collection.js"></script>
+<script src="/js/views/contentList-view.js"></script>
+<script src="/js/models/contentSearch-model.js"></script>
+
+<script src="/js/views/popup-view.js"></script>
+
+
+
+
+
+
+
+<script>
+   
+    /* models */
+    var contentCollection = new ContentCollection(<?=$this->results->toJson(); ?>);
+    
+    var contentSearchModel = new ContentSearchModel({
+        textSearch: '<?=$this->filters['text'];?>',
+        selectedSection: '<?= empty($this->filters['section_id']) ? '' : $this->filters['section_id']; ?>'
+    });
+
+
+    /* view */
+
+    var contentListView = new ContentListView({
+            model:  {
+                contentCollection:  contentCollection,
+                contentSearchModel: contentSearchModel
+            },
+            el: $('#contentListContainer')
+    });
+
+    contentListView.on("doSearch",function(params) {
+        mainView.loadDynamicContent(params);
+    });
+    
+    contentListView.on("showPublishOptions",function(content) {
+        showPublishModalController(content);
+        publishContentPopupView.on("success",statusChangeHandler);
+    });
+    
+    function statusChangeHandler(model) {
+        contentListView.statusChange(model);
+    }
+    
+    contentListView.on("editContent",function(content) {
+        
+        urlModel.saveURL();
+        
+        mainView.loadDynamicContent('/edit/id/'+content.get('id'));
+    });
+    
+    
+    contentListView.on("newContent",function() {
+        showNewContentController();
+    });
+    
+    contentListView.on("deleteContent",function(content) {
+        showDeleteContentController(content);
+    });
+    
+    
+    
+
+</script>

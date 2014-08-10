@@ -1,0 +1,35 @@
+<?php
+/*
+ * 
+ *  OJO AL PIOJO. ESTE REQUIRE NO DEBERÍA ESTAR AQUI, ASI QUE HAY QUE REVISAR TODO ESTO.
+ *  LUEGO EL INITGLOBAL TIENE SENTIDO SI QUEREMOS UTILIZAR EL ACCOUNT QUE GUARDA EN ESTE ACTION HELPER
+ * 
+ */
+require_once '/Users/ariel/magnet/Amomicasa/06_WWW/admin/library/SIDIAR/Controller/Action/Helper/Initializer.php';
+
+class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+{
+
+    
+  protected function _initConfig()
+  {
+    $config = new Zend_Config($this->getOptions());
+    Zend_Registry::set('config', $config);
+  }
+  
+  protected function _initGlobalVars() {
+      
+      
+      
+      Zend_Controller_Action_HelperBroker::addPath(
+                APPLICATION_PATH . '/../library/SIDIAR/Controller/Action/Helper'
+        );
+        $initializer = Zend_Controller_Action_HelperBroker::addHelper(
+                        new SIDIAR_Controller_Action_Helper_Initializer()
+        );
+        
+        
+    }
+    
+}
+

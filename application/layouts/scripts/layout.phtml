@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>Amomicasa</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/styles.css" rel="stylesheet">
+
+    
+    
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+        
+        
+      <nav id="navbar-top" class="navbar navbar-static-top" role="navigation">
+          <div class="navbar-left ">
+              <div class="nav-brand"><img src="../images/logo_navtop.gif" /></div> 
+          </div>
+          <div class="navbar-right">
+
+              <div class="nav-logout">
+                  <button id="fullscreenBTN" type="button" class="btn btn-logout " data-toggle="tooltip" data-placement="left" title="Fullscreen" >
+                    <span class="glyphicon glyphicon-fullscreen"></span>
+                  </button>
+                  
+                  <button type="button" class="btn btn-logout " data-toggle="tooltip" data-placement="left" title="Log out" >
+                    <span class="glyphicon glyphicon-off"></span>
+                  </button>
+              </div>
+                  
+          </div>
+      </nav>
+         <div class="container-amc">
+             
+             <div id="navbar-left">
+                 <div class="nav-title">CONTENIDOS</div>
+                 <ul  class="nav nav-leftmenu">
+                    <li  ><a href="#" id="option_articles" ><span class="glyphicon glyphicon-book"></span> &nbsp;Artículos</a></li>
+                    <li><a href="#" id="option_diapos" ><span class="glyphicon glyphicon-camera"></span> &nbsp;Diapos</a></li>
+                    <li><a href="#" id="option_links" ><span class="glyphicon glyphicon-link"></span> &nbsp;Enlaces externos</a></li>
+                    <li ><a href="#" id="option_fav"><span class="glyphicon glyphicon-heart-empty"></span> &nbsp;Mi rincón favorito</a></li>
+                    
+                </ul>
+                 <ul  class="nav leftbar-second nav-leftmenu">
+                    <div class="nav-title">OTROS</div>
+                    <li ><a href="#" id="option_sections"><span class="glyphicon glyphicon-align-left"></span> &nbsp;Secciones</a></li>
+                    <li ><a href="#" id="option_newsletter"><span class="glyphicon glyphicon-envelope"></span> &nbsp;Newsletter</a></li>
+                </ul>
+             </div>
+             
+               
+            <div class="content-central" >
+                <?php
+              if (count($this->messages) > 0) {
+              printf("<div id='flash'>%s</div>", $this->messages[0]);
+              }
+              ?>
+                <div id="content-dynamic">
+                <?php echo $this->layout()->content; ?>   
+                </div>
+            </div>
+    </div><!-- /.container -->
+    <div class="clearfix"></div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="/js/libs/underscore-min.js"></script>
+    <script src="/js/libs/backbone-min.js"></script>
+    
+    <script src="/js/models/url-model.js"></script>
+    <script src="/js/views/main-view.js"></script>
+
+    <script>
+        
+        Backbone.emulateJSON = true;
+        
+        var urlModel = new URLModel({
+            controller: '',
+            page: '',
+            params: ''
+        });
+        
+        var mainView = new MainView({
+            model: {urlModel : urlModel},
+            el: $('body')
+        });
+        
+    </script>
+  </body>
+</html>
+
+
+
+

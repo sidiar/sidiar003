@@ -1,0 +1,88 @@
+<div class="status-form-group">
+
+    <div class="status-input">
+
+        <div class="btn-group" data-toggle="buttons">
+
+            <label class="btn btn-change-status-on active ">
+                <input type="radio" name="optionStatus" id="optionStatusOn" value="1" checked  > <span class="glyphicon glyphicon-ok-circle  "></span> On
+            </label>
+
+            <label class="btn btn-change-status-off ">
+                <input type="radio" name="optionStatus" id="optionStatusOff" value="0"> <span class="glyphicon glyphicon-remove-circle  "></span> Off
+            </label>
+
+            <label class="btn btn-change-status-pending  ">
+                <input type="radio" name="optionStatus" id="optionStatusPending"  value="2"   > <span class="glyphicon glyphicon-ok-circle  "></span> Pending
+            </label>
+
+        </div>
+
+    </div>
+
+    <div class="status-input-date" id="inputDateFromContainer">
+
+        <input type="date" class="form-control" id="inputDateFrom" placeholder="Publish from date">
+    </div>
+
+</div>
+
+
+
+
+<hr>
+
+<div class="status-form-group">
+
+    <div class="status-input status-unit-label">
+        <input type="checkbox" name="optionStatusUntil" id="optionStatusUntil"  > Publish until
+    </div>
+
+    <div class="status-input-date" id="inputDateToContainer">
+        <input type="date" class="form-control" id="inputDateTo" placeholder="Expiration date">
+    </div>
+
+</div>
+
+
+<script src="/js/models/status-model.js"></script>
+<script src="/js/views/popup-publishcontent-view.js"></script>
+
+<script>
+
+    var statusModel;
+    var publishContentPopupView;
+
+    function showPublishModalController(content) {
+
+        /* model */
+
+        statusModel = new StatusModel({
+            id: content.get('id'),
+            status: content.get('status'),
+            previousStatus: content.get('status'),
+            title: content.get('title'),
+            publish_date_from: content.get('publish_date_from'),
+            publish_date_to: content.get('publish_date_to'),
+            expires: content.get('expires')
+        });
+
+        /* view */
+        
+        publishContentPopupView = new PublishContentPopupView({
+            model: statusModel,
+            el: $('#publishContent_popup')
+        });
+        
+        statusModel.on("invalid", statusModelValidErrorHandler);
+
+        publishContentPopupView.showPopup();
+        
+    }
+    
+    function statusModelValidErrorHandler(model, error) {
+        publishContentPopupView.statusModelValidErrorHandler(error);
+    }
+
+</script>
+

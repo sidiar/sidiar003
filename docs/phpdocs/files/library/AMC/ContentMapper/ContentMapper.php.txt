@@ -1,0 +1,37 @@
+<?php
+
+namespace AMC;
+
+require_once 'ArticleMapper.php';
+
+/**
+ * Define un factory para crear los Mappers de cada tipo de contenido para amomicasa.com
+ *
+ * @package AMC
+ * @author ariel
+ * 
+ */
+class ContentMapper {
+    
+    const CONTENTTYPE_ARTICLE = 'CONTENTTYPE_ARTICLE';
+    const CONTENTTYPE_DIAPO = 'CONTENTTYPE_DIAPO';
+    const CONTENTTYPE_LINK = 'CONTENTTYPE_LINK';
+ 
+    static function getInstance($contentType)
+    {
+        switch ($contentType) 
+        {
+            case CONTENTTYPE_ARTICLE:
+                return new ArticleMapper();
+            case CONTENTTYPE_DIAPO:
+                break;
+            case CONTENTTYPE_LINK:
+                break;
+            default:
+                throw new InvalidArgumentException("$contentType is not a valid content type");
+        
+        }
+    }
+    
+}
+

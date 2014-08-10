@@ -1,0 +1,39 @@
+
+<div class="form-group has-feedback">
+    <label for="inputTitle">Title</label>
+    <input type="text" class="form-control" id="newContentTitleInput" placeholder="Please enter content title" value="">
+</div>
+
+
+<script src="/js/views/popup-newcontent-view.js"></script>
+
+<script>
+
+    var newContentModalView;
+    
+    function showNewContentController() {
+        
+        
+        contentModel = new ContentModel({ 
+            title: '',
+            popuptitle: '<?php echo $this->popuptitle; ?>'
+        });
+         
+        newContentModalView = new NewContentPopupView({
+             model: contentModel,
+             el: $('#newContent_popup')
+             
+        });
+        
+        
+        newContentModalView.on("success",function() {
+            if (contentModel.get('id')) {
+                mainView.clearModals();
+                urlModel.saveURL();
+                mainView.loadDynamicContent('/edit/id/'+contentModel.get('id'));
+            }
+        });
+        newContentModalView.showPopup();
+    }
+    
+</script>

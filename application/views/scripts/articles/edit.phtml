@@ -1,0 +1,255 @@
+
+
+
+<div id="content_tabs">
+
+    <div class="edit-title">
+        <span><?= $this->article->title;?></span>
+        <div class="edit-close">
+            <button type="button" id="btn-edit-close" data-toggle="modal"  class="btn btn-edit-close">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+            </button>              
+        </div>
+    </div>
+
+    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+        <li class="active"><a href="#main" data-toggle="tab">Article</a></li>
+        <li><a href="#orange" data-toggle="tab">Texts</a></li>
+        <li><a href="#yellow" data-toggle="tab">Images</a></li>
+        <li><a href="#green" data-toggle="tab">TAGs</a></li>
+        <li><a href="#blue" data-toggle="tab">Related</a></li>
+    </ul>
+
+    <div class="tab-container">
+        <div id="my-tab-content" class="tab-content">
+            <div class="tab-pane active" id="main">
+
+                <?php        
+                
+                echo $this->partial('_content_edit_tab_main_top.phtml' ,array('content' => $this->article));
+        
+                ?>
+        
+                <!-- MAIN TAB -->
+                
+                <div class="tab-main-leftpanel">
+                    <form role="form">
+                        <div class="form-group has-feedback">
+                            <label for="inputTitle">Title</label>
+                            <input type="text" class="form-control inputAjax" id="inputTitle" placeholder="Title" value="<?= $this->article->title;?>">
+                            <span class=" glyphicon glyphicon-pencil form-control-feedback "></span>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="inputText">Text</label>
+                            <textarea type="text" class="form-control inputAjax" id="inputText" placeholder="Text"><?= $this->article->text;?></textarea>
+                            <span class=" glyphicon glyphicon-pencil form-control-feedback "></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Section</label>
+                            <select id="selectSection" class="form-control inputAjax">
+                                <?php foreach ($this->sections as $section ) { 
+                                    $section_active = ($this->article->section_id == $section->id) ? 'selected' : '';
+                                    echo "<option value='$section->id' $section_active >$section->name</option>";
+                                }
+                                ?>                            
+                            </select>
+                        </div>
+
+                    </form>
+
+                </div>
+                <div class="tab-main-rightpanel">
+
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Main image</label>                            
+                            <div class="image-simuator _popup_mainimage_btn"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Thumbnail</label>
+                            <div class="image-simuator _popup_thumbnail_btn"></div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="clearfix"></div>
+                <!-- FIN MAIN TAB -->
+            </div>
+
+            <div class="tab-pane" id="orange">
+                <h1>Orange</h1>
+                <p>orange orange orange orange orange</p>
+            </div>
+            <div class="tab-pane" id="yellow">
+                <h1>Yellow</h1>
+                <p>yellow yellow yellow yellow yellow</p>
+            </div>
+            <div class="tab-pane" id="green">
+                <h1>Green</h1>
+                <p>green green green green green</p>
+            </div>
+            <div class="tab-pane" id="blue">
+                <h1>Blue</h1>
+                <p>blue blue blue blue blue</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+   
+<script src="/js/views/content-view.js"></script>
+<script src="/js/views/content-article-view.js"></script>
+
+<script>
+    
+   var ContentModel = Backbone.Model.extend({
+        url: '/api/article'
+        
+   });
+   
+    contentModel = new ContentModel(<?= "{ "
+            . "id: '" . $this->article->id . "',"
+            . "title: '" . $this->article->title . "',"
+            . "text: '" . $this->article->text . "',"
+            . "section_id: '" . $this->article->section_id . "',"
+            . "status: '" . $this->article->status . "',"
+            . "publish_date_from: '" . $this->article->publish_date_from . "',"
+            . "publish_date_to: '" . $this->article->publish_date_to . "',"
+            . "expires: '" . $this->article->expires . "'"
+            . "}"?>);
+    
+    contentModel.on("invalid", contentModelValidErrorHandler);
+
+    contentModel.on("error",contentModelSaveErrorHandler);
+    contentModel.on("success",contentModelSaveSuccessHandler);
+        
+    contentView = new ContentArticleView({
+         model:  {
+                contentModel:  contentModel
+            },
+            el: $('#content_tabs')
+    });
+    
+    
+    
+    function contentModelValidErrorHandler(model, error) {
+      //  contentView.statusModelValidErrorHandler(error);
+    }
+
+    function contentModelSaveErrorHandler(model, response, options) {
+        console.log("error: ", response, ", " ,options);
+     //   contentView.statusServerResponseHandler(model, response, options);
+    }
+
+    function contentModelSaveSuccessHandler(model, response, options) {
+      //  contentView.statusServerResponseHandler(model, response, options);
+    }
+    
+    
+    
+    
+</script>
+
+
+
+<script>
+    /*
+     * Status
+     */
+    
+    contentView.on("showPublishOptions",function(content) {
+        showPublishModalController(content);
+        publishContentPopupView.on("success",statusChangeHandler);
+    })
+    
+    function statusChangeHandler(model) {
+        contentView.statusChange(model);
+    }
+    
+    contentView.on("close",contentCloseHandler);
+    
+    function contentCloseHandler() {
+        mainView.loadPrevContent();
+    }
+    
+</script>
+
+
+<?php 
+
+    echo $this->partial('_popup.phtml' ,array(
+        'popup_id' => 'publishContent_popup',
+        'popup_body' => $this->partial('_popup_publish_content.phtml',array())
+        ));
+
+?>
+
+
+
+
+   
+<script src="/js/models/uploadImage-model.js"></script>
+<script src="/js/views/popup-uploadimage-view.js"></script>
+
+<script>
+    
+    contentView.on("editMainImage", function (content) {
+        showImageUploadController(content);
+    });
+    
+    
+    
+    contentView.on("editThumbnail", function (content) {
+        showImageUploadController(content);
+    });
+    
+    
+    
+    
+    
+    var uploadImageModel;
+    var uploadImagePopupView;
+
+    function showImageUploadController(content) {
+
+        /* model */
+
+        uploadImageModel = new StatusModel({
+            id: content.get('id')
+        });
+
+        /* view */
+        
+        uploadImagePopupView = new UploadImagePopupView({
+            model: uploadImageModel,
+            el: $('#uploadimage_popup')
+        });
+        
+     //   uploadImageModel.on("invalid", statusModelValidErrorHandler);
+
+        uploadImagePopupView.showPopup();
+        
+    }
+    /*
+    function statusModelValidErrorHandler(model, error) {
+        publishContentPopupView.statusModelValidErrorHandler(error);
+    }
+    
+    */
+    
+</script>
+
+<?php 
+
+    echo $this->partial('_popup.phtml' ,array(
+        'popup_id' => 'uploadimage_popup',
+        'popup_body' => $this->partial('_popup_upload_image.phtml',array())
+        ));
+
+?>

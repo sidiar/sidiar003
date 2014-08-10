@@ -1,0 +1,19 @@
+
+
+<? if (sizeof($this->errors)>0) { ?>
+    <div class="alert alert-danger">
+    <?= $this->Errors($this->errors); ?>
+    </div>
+<? } ?>
+
+<div id="login_panel">
+    
+    <div class="login_logo">
+        <img src="/images/logo_w100.gif" width="100" height="95" />
+    </div>
+    
+    <?= $this->form; ?>
+
+</div>
+
+
